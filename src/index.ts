@@ -1,1 +1,2 @@
-export * from "./types/PartialPick";
+export * from "./types/PartialProps";
+export * from "./types/PartialSelect";
