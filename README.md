@@ -84,3 +84,31 @@ const createMember4: CreateMember = {
   invitationAccepted: true,
 }; // ❌
 ```
+
+# NumberRange
+
+- 숫자 범위를 지정해서 number 타입보다 더 좁은 타입을 통해 타입 안정성을 높일 수 있습니다.
+
+```ts
+type NumberRange<
+  L extends number,
+  H extends number,
+  LAcc extends any[] = [],
+  HAcc extends any[] = [],
+  Acc extends number[] = []
+> = L extends LAcc["length"]
+  ? H extends HAcc["length"]
+    ? Acc[number] | HAcc["length"]
+    : NumberRange<L, H, LAcc, [...HAcc, L], [...Acc, HAcc["length"]]>
+  : NumberRange<L, H, [...LAcc, L], [...LAcc, L], Acc>;
+
+/*
+ * 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
+ */
+export type FeedPaginateLimit = NumberRange<1, 10>;
+const limit1: FeedPaginateLimit = 10; // ✅
+const limit2: FeedPaginateLimit = 1; // ✅
+const limit3: FeedPaginateLimit = 3; // ✅
+const limit4: FeedPaginateLimit = 11; // ❌
+const limit5: FeedPaginateLimit = 100; // ❌
+```
